@@ -187,41 +187,5 @@ def mptmp():
             mensagem = f"Erro: {str(e)}"
     return render_template('mptmp.html', mensagem=mensagem)
 
-# Rota para a página "3D Model Converter" (3mc)
-@app.route('/3mc', methods=['GET', 'POST'])
-def model_converter():
-    mensagem = None
-    if request.method == 'POST':
-        if 'model' not in request.files:
-            mensagem = "Nenhum arquivo enviado."
-            return render_template('3mc.html', mensagem=mensagem)
-        model_file = request.files['model']
-        if model_file.filename == '':
-            mensagem = "Nenhum arquivo selecionado."
-            return render_template('3mc.html', mensagem=mensagem)
-        target_format = request.form.get('target_format', 'fbx').lower()
-        try:
-            with tempfile.TemporaryDirectory() as tmpdirname:
-                input_path = os.path.join(tmpdirname, model_file.filename)
-                model_file.save(input_path)
-                output_filename = f"converted.{target_format}"
-                output_path = os.path.join(tmpdirname, output_filename)
-                script_path = os.path.join(os.path.dirname(__file__), "convert.py")
-                comando = [
-                    "blender", "--background", "--python", script_path, "--",
-                    input_path, output_path, target_format
-                ]
-                resultado = subprocess.run(comando, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-                if resultado.returncode != 0:
-                    mensagem = f"Erro na conversão: {resultado.stderr}"
-                    return render_template('3mc.html', mensagem=mensagem)
-                with open(output_path, 'rb') as f:
-                    file_data = io.BytesIO(f.read())
-                file_data.seek(0)
-                return send_file(file_data, as_attachment=True, download_name=output_filename)
-        except Exception as e:
-            mensagem = f"Erro: {str(e)}"
-    return render_template('3mc.html', mensagem=mensagem)
-
 if __name__ == '__main__':
     app.run(debug=True)
