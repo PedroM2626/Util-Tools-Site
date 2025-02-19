@@ -1,5 +1,4 @@
 flask
-#PIL
 pytube
 moviepy
 yt_dlp
@@ -8,3 +7,4 @@ gunicorn
 flask-socketio
 flask_sqlalchemy
 python-dotenv
+pytesseract
