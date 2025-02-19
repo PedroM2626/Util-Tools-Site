@@ -4,3 +4,7 @@ pytube
 moviepy
 yt_dlp
 rembg
+gunicorn
+flask-socketio
+flask_sqlalchemy
+python-dotenv
