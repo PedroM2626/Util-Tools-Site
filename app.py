@@ -10,7 +10,7 @@ from rembg import remove
 app = Flask(__name__)
 
 # Configuração do Tesseract (necessário apenas no Windows)
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = os.getenv("TESSERACT_CMD", "/usr/bin/tesseract")
 
 # Pasta para upload de arquivos
 UPLOAD_FOLDER = 'static/uploads'
