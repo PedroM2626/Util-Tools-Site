@@ -4,8 +4,10 @@ FROM python:3.12-slim
 # Instale as dependências do sistema, incluindo Tesseract OCR
 RUN apt-get update && apt-get install -y \
     tesseract-ocr \
-    libtesseract-dev \
-    && rm -rf /var/lib/apt/lists/*
+    tesseract-ocr-por \
+    libtesseract-dev && \
+    rm -rf /var/lib/apt/lists/*
+
 
 # Defina o diretório de trabalho
 WORKDIR /app
