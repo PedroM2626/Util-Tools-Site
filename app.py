@@ -16,7 +16,9 @@ except ImportError as e:
 
 # Removemos os imports e instância do Spotdl, pois não usaremos Spotify no site
 
+print("Starting Flask app initialization...")
 app = Flask(__name__)
+print("Flask app created successfully")
 
 # Configuração do Tesseract (necessário apenas no Windows)
 pytesseract.pytesseract.tesseract_cmd = os.getenv("TESSERACT_CMD", "/usr/bin/tesseract")
@@ -203,5 +205,7 @@ def mptmp():
     return render_template('mptmp.html', mensagem=mensagem)
 
 if __name__ == '__main__':
+    print("Starting main execution...")
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    print(f"Starting Flask app on host 0.0.0.0 port {port}...")
+    app.run(host='0.0.0.0', port=port, debug=True)
