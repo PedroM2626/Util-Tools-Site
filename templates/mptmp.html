@@ -3,46 +3,457 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="/Util-tools/assets/UtilToolsIcon.webp">
-    <title>Utils Tools</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>MP4 para MP3 - Conversor de Vídeo para Áudio | Util Tools</title>
+    <meta name="description" content="Converta vídeos MP4 em áudio MP3 de alta qualidade. Gratuito, rápido e sem perda de qualidade.">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header class="bg-dark text-white py-3">
-        <div class="container">
-            <h1>Util Tools</h1>
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
+    
+    <!-- Floating Particles -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="modern-header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <i class="fas fa-tools"></i>
+                Util Tools
+            </a>
+            
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            
             <nav>
-                <p>MP4 to MP3</p>
-                <ul class="nav justify-content-center">
-                    <li class="nav-item"><a class="nav-link text-white" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/ocr">OCR</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/ytc">YouTube Converter</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/mptmp">MP4 to MP3</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/imagermbg">Background Remover</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/mdcr">Music Downloader</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/inscon">Instagram Vídeo Donwloader</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/sobre">About</a></li>
+                <ul class="nav-menu" id="navMenu">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ocr">
+                            <i class="fas fa-file-text"></i> OCR
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ytc">
+                            <i class="fab fa-youtube"></i> YouTube
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mptmp" style="background: rgba(255, 255, 255, 0.1);">
+                            <i class="fas fa-music"></i> MP4 → MP3
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/imagermbg">
+                            <i class="fas fa-cut"></i> Remove BG
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mdcr">
+                            <i class="fab fa-soundcloud"></i> Music
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/inscon">
+                            <i class="fab fa-instagram"></i> Instagram
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sobre">
+                            <i class="fas fa-info-circle"></i> Sobre
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </div>
     </header>
-    <main class="container my-5">
-        <div class="card">
-            <div class="card-body">
-                <form method="POST" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="arquivo" class="form-label">Selecione um arquivo MP4:</label>
-                        <input type="file" class="form-control" id="arquivo" name="arquivo" accept=".mp4" required>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1 class="hero-title">
+            <i class="fas fa-exchange-alt" style="color: #764ba2;"></i>
+            MP4 para MP3
+        </h1>
+        <p class="hero-subtitle">
+            Converta seus vídeos MP4 em áudio MP3 de alta qualidade. Simples, rápido e gratuito.
+        </p>
+    </section>
+
+    <!-- Main Content -->
+    <main style="max-width: 800px; margin: 0 auto; padding: 0 2rem;">
+        <!-- Upload Form -->
+        <div class="form-container">
+            <form method="post" enctype="multipart/form-data" id="convertForm">
+                <div class="form-group">
+                    <label for="arquivo" class="form-label">
+                        <i class="fas fa-video"></i>
+                        Selecione um vídeo MP4
+                    </label>
+                    <input type="file" 
+                           class="form-control" 
+                           id="arquivo" 
+                           name="arquivo" 
+                           accept="video/mp4,.mp4"
+                           required>
+                    <div style="margin-top: 0.5rem; color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">
+                        <i class="fas fa-info-circle"></i>
+                        Apenas arquivos MP4 - Máximo 100MB
                     </div>
-                    <button type="submit" class="btn btn-primary">Converter para MP3</button>
-                </form>
-                {% if mensagem %}
-                <div class="alert alert-info mt-3">{{ mensagem }}</div>
-                {% endif %}
+                </div>
+                
+                <!-- Video Preview -->
+                <div id="videoPreview" style="display: none; margin: 1rem 0; text-align: center;">
+                    <video id="previewVideo" controls style="max-width: 100%; max-height: 300px; border-radius: 8px; box-shadow: var(--shadow-lg);">
+                        Seu navegador não suporta o elemento de vídeo.
+                    </video>
+                    <div id="videoInfo" style="margin-top: 0.5rem; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;"></div>
+                </div>
+                
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <span id="submitText">
+                        <i class="fas fa-music"></i>
+                        Converter para MP3
+                    </span>
+                    <span id="loadingText" style="display: none;">
+                        <div class="loading"></div>
+                        Convertendo áudio...
+                    </span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Alert Messages -->
+        {% if mensagem %}
+        <div class="alert {% if 'sucesso' in mensagem %}alert-success{% else %}alert-danger{% endif %}">
+            <i class="fas {% if 'sucesso' in mensagem %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %}"></i>
+            {{ mensagem }}
+        </div>
+        {% endif %}
+
+        <!-- Features Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 3rem 0;">
+            
+            <div class="tool-card" style="text-align: center; padding: 1.5rem;">
+                <div class="tool-icon" style="color: #667eea; font-size: 2.5rem;">
+                    <i class="fas fa-headphones"></i>
+                </div>
+                <h3 style="color: white; margin: 1rem 0 0.5rem;">Alta Qualidade</h3>
+                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                    Mantém a qualidade original do áudio
+                </p>
+            </div>
+
+            <div class="tool-card" style="text-align: center; padding: 1.5rem;">
+                <div class="tool-icon" style="color: #48bb78; font-size: 2.5rem;">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 style="color: white; margin: 1rem 0 0.5rem;">Conversão Rápida</h3>
+                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                    Processamento otimizado e veloz
+                </p>
+            </div>
+
+            <div class="tool-card" style="text-align: center; padding: 1.5rem;">
+                <div class="tool-icon" style="color: #f093fb; font-size: 2.5rem;">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 style="color: white; margin: 1rem 0 0.5rem;">100% Seguro</h3>
+                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                    Arquivos processados localmente
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Conversion Process -->
+        <div class="tool-card" style="margin-top: 2rem;">
+            <h3 class="tool-title" style="text-align: center; margin-bottom: 2rem;">
+                <i class="fas fa-cogs"></i>
+                Como Funciona a Conversão
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                
+                <div style="text-align: center; padding: 1rem;">
+                    <div style="background: linear-gradient(45deg, #667eea, #764ba2); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 1.5rem; font-weight: bold;">
+                        1
+                    </div>
+                    <h4 style="color: white; margin-bottom: 0.5rem;">Upload</h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                        Selecione seu arquivo MP4
+                    </p>
+                </div>
+
+                <div style="text-align: center; padding: 1rem;">
+                    <div style="background: linear-gradient(45deg, #48bb78, #38a169); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 1.5rem; font-weight: bold;">
+                        2
+                    </div>
+                    <h4 style="color: white; margin-bottom: 0.5rem;">Extração</h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                        Extraímos o áudio do vídeo
+                    </p>
+                </div>
+
+                <div style="text-align: center; padding: 1rem;">
+                    <div style="background: linear-gradient(45deg, #f093fb, #f5576c); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 1.5rem; font-weight: bold;">
+                        3
+                    </div>
+                    <h4 style="color: white; margin-bottom: 0.5rem;">Download</h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                        Baixe seu arquivo MP3
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="tool-card" style="margin-top: 2rem; text-align: left;">
+            <h3 class="tool-title" style="text-align: center;">
+                <i class="fas fa-lightbulb"></i>
+                Como usar o conversor
+            </h3>
+            <div style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
+                <div style="margin-bottom: 1rem;">
+                    <i class="fas fa-check" style="color: #48bb78; margin-right: 0.5rem;"></i>
+                    <strong>1.</strong> Clique em "Selecione um vídeo MP4" e escolha seu arquivo
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <i class="fas fa-check" style="color: #48bb78; margin-right: 0.5rem;"></i>
+                    <strong>2.</strong> Aguarde o preview do vídeo carregar
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <i class="fas fa-check" style="color: #48bb78; margin-right: 0.5rem;"></i>
+                    <strong>3.</strong> Clique em "Converter para MP3"
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <i class="fas fa-check" style="color: #48bb78; margin-right: 0.5rem;"></i>
+                    <strong>4.</strong> Aguarde a conversão e faça o download
+                </div>
+                
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(102, 126, 234, 0.1); border-radius: 8px;">
+                    <i class="fas fa-lightbulb" style="color: #667eea; margin-right: 0.5rem;"></i>
+                    <strong>Dica:</strong> A qualidade do áudio MP3 será mantida conforme a qualidade original do vídeo.
+                </div>
+
+                <div style="margin-top: 1rem; padding: 1rem; background: rgba(72, 187, 120, 0.1); border-radius: 8px;">
+                    <i class="fas fa-shield-alt" style="color: #48bb78; margin-right: 0.5rem;"></i>
+                    <strong>Privacidade:</strong> Seus vídeos são processados localmente e removidos após a conversão.
+                </div>
+
+                <div style="margin-top: 1rem; padding: 1rem; background: rgba(255, 193, 7, 0.1); border-radius: 8px; border: 1px solid rgba(255, 193, 7, 0.3);">
+                    <i class="fas fa-info-circle" style="color: #ffc107; margin-right: 0.5rem;"></i>
+                    <strong>Formatos:</strong> Suportamos apenas arquivos MP4. Para outros formatos, use primeiro um conversor de vídeo.
+                </div>
+            </div>
+        </div>
+
+        <!-- Supported Features -->
+        <div class="tool-card" style="margin-top: 2rem; text-align: center;">
+            <h3 class="tool-title">
+                <i class="fas fa-check-circle"></i>
+                Recursos Suportados
+            </h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 1.5rem;">
+                <div style="padding: 0.5rem 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 20px; color: rgba(255, 255, 255, 0.9);">
+                    <i class="fas fa-video" style="color: #667eea;"></i>
+                    Entrada: MP4
+                </div>
+                <div style="padding: 0.5rem 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 20px; color: rgba(255, 255, 255, 0.9);">
+                    <i class="fas fa-music" style="color: #48bb78;"></i>
+                    Saída: MP3
+                </div>
+                <div style="padding: 0.5rem 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 20px; color: rgba(255, 255, 255, 0.9);">
+                    <i class="fas fa-hdd" style="color: #f093fb;"></i>
+                    Até 100MB
+                </div>
+                <div style="padding: 0.5rem 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 20px; color: rgba(255, 255, 255, 0.9);">
+                    <i class="fas fa-star" style="color: #ffc107;"></i>
+                    Alta Qualidade
+                </div>
             </div>
         </div>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>
+            <i class="fas fa-heart" style="color: #f56565;"></i>
+            Util Tools - Conversor MP4 para MP3 gratuito
+        </p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
+        // Form submission with loading state
+        document.getElementById('convertForm').addEventListener('submit', function() {
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const loadingText = document.getElementById('loadingText');
+            
+            submitBtn.disabled = true;
+            submitText.style.display = 'none';
+            loadingText.style.display = 'inline-flex';
+        });
+
+        // Video preview
+        document.getElementById('arquivo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('videoPreview');
+            const previewVideo = document.getElementById('previewVideo');
+            const videoInfo = document.getElementById('videoInfo');
+            const label = document.querySelector('label[for="arquivo"]');
+            
+            if (file) {
+                // Check file size (100MB limit)
+                if (file.size > 100 * 1024 * 1024) {
+                    alert('Arquivo muito grande! Máximo 100MB permitido.');
+                    this.value = '';
+                    return;
+                }
+                
+                // Check file type
+                if (!file.type.includes('mp4')) {
+                    alert('Apenas arquivos MP4 são suportados!');
+                    this.value = '';
+                    return;
+                }
+                
+                const url = URL.createObjectURL(file);
+                previewVideo.src = url;
+                preview.style.display = 'block';
+                
+                // Show file info
+                const fileSize = (file.size / (1024 * 1024)).toFixed(1);
+                videoInfo.innerHTML = `
+                    <i class="fas fa-file-video"></i> ${file.name} 
+                    <span style="margin-left: 1rem;"><i class="fas fa-weight"></i> ${fileSize} MB</span>
+                `;
+                
+                // Update label
+                label.innerHTML = `<i class="fas fa-video"></i> ${file.name}`;
+                label.style.color = '#48bb78';
+                
+                // Animate preview
+                previewVideo.style.opacity = '0';
+                previewVideo.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    previewVideo.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                    previewVideo.style.opacity = '1';
+                    previewVideo.style.transform = 'scale(1)';
+                }, 100);
+                
+                // Clean up URL when video loads
+                previewVideo.addEventListener('loadeddata', () => {
+                    URL.revokeObjectURL(url);
+                }, { once: true });
+            } else {
+                preview.style.display = 'none';
+                label.innerHTML = '<i class="fas fa-video"></i> Selecione um vídeo MP4';
+                label.style.color = '';
+            }
+        });
+
+        // Drag and drop support
+        const form = document.getElementById('convertForm');
+        const fileInput = document.getElementById('arquivo');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            form.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            form.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            form.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            form.style.background = 'rgba(102, 126, 234, 0.1)';
+            form.style.borderColor = '#667eea';
+        }
+
+        function unhighlight(e) {
+            form.style.background = '';
+            form.style.borderColor = '';
+        }
+
+        form.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            if (files.length > 0) {
+                fileInput.files = files;
+                fileInput.dispatchEvent(new Event('change'));
+            }
+        }
+
+        // Scroll effect for header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.modern-header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.15)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.1)';
+            }
+        });
+
+        // Animate cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.tool-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
 </body>
 </html>

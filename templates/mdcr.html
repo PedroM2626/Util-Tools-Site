@@ -3,53 +3,382 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="/Util-tools/assets/UtilToolsIcon.webp">
-    <title>Util Tools</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Music Downloader - Baixe Músicas do SoundCloud | Util Tools</title>
+    <meta name="description" content="Baixe músicas do SoundCloud em alta qualidade. Gratuito, rápido e sem limitações.">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header class="bg-dark text-white py-3">
-        <div class="container">
-            <h1 class="text-center">Util Tools</h1>
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
+    
+    <!-- Floating Particles -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="modern-header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <i class="fas fa-tools"></i>
+                Util Tools
+            </a>
+            
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            
             <nav>
-                <p class = "page">Music Downloader</p>
-                <ul class="nav justify-content-center">
-                    <li class="nav-item"><a class="nav-link text-white" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/ocr">OCR</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/ytc">YouTube Converter</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/mptmp">MP4 to MP3</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/imagermbg">Background Remover</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/mdcr">Music Downloader</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/inscon">Instagram Vídeo Donwloader</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="/sobre">About</a></li>
+                <ul class="nav-menu" id="navMenu">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ocr">
+                            <i class="fas fa-file-text"></i> OCR
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/ytc">
+                            <i class="fab fa-youtube"></i> YouTube
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mptmp">
+                            <i class="fas fa-music"></i> MP4 → MP3
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/imagermbg">
+                            <i class="fas fa-cut"></i> Remove BG
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mdcr" style="background: rgba(255, 255, 255, 0.1);">
+                            <i class="fab fa-soundcloud"></i> Music
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/inscon">
+                            <i class="fab fa-instagram"></i> Instagram
+                        </a>
+                    </li>
+                    <li class="nav-item" style="margin-top: 0.5rem;">
+                        <a class="nav-link" href="/sobre">
+                            <i class="fas fa-info-circle"></i> Sobre
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </div>
     </header>
-    <main class="container my-5">
-        <div class="card">
-            <div class="card-body">
-                <h2 class="card-title text-center">Music Downloader</h2>
-                <form method="POST">
-                    <div class="mb-3">
-                        <label for="url" class="form-label">URL da música (SoundCloud):</label>
-                        <input type="text" class="form-control" id="url" name="url" required>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1 class="hero-title">
+            <i class="fab fa-soundcloud" style="color: #ff5500;"></i>
+            Music Downloader
+        </h1>
+        <p class="hero-subtitle">
+            Baixe suas músicas favoritas do SoundCloud em alta qualidade. Simples, rápido e totalmente gratuito.
+        </p>
+    </section>
+
+    <!-- Main Content -->
+    <main style="max-width: 800px; margin: 0 auto; padding: 0 2rem;">
+        <!-- Download Form -->
+        <div class="form-container">
+            <form method="post" id="musicForm">
+                <div class="form-group">
+                    <label for="url" class="form-label">
+                        <i class="fab fa-soundcloud"></i>
+                        URL da Música do SoundCloud
+                    </label>
+                    <input type="url" 
+                           class="form-control" 
+                           id="url" 
+                           name="url" 
+                           placeholder="https://soundcloud.com/artist/track"
+                           required>
+                    <div style="margin-top: 0.5rem; color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">
+                        <i class="fas fa-info-circle"></i>
+                        Cole aqui o link da música ou playlist do SoundCloud
                     </div>
-                    <div class="mb-3">
-                        <label for="plataforma" class="form-label">Plataforma:</label>
-                        <select class="form-select" id="plataforma" name="plataforma" required>
-                            <option value="soundcloud">SoundCloud</option>
-                        </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="plataforma" class="form-label">
+                        <i class="fas fa-cloud"></i>
+                        Plataforma
+                    </label>
+                    <select class="form-control" id="plataforma" name="plataforma" required>
+                        <option value="soundcloud">🎵 SoundCloud</option>
+                    </select>
+                    <div style="margin-top: 0.5rem; color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">
+                        <i class="fas fa-info-circle"></i>
+                        Atualmente suportamos apenas SoundCloud
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Baixar Música</button>
-                </form>
-                {% if mensagem %}
-                <div class="alert alert-info mt-3">{{ mensagem }}</div>
-                {% endif %}
+                </div>
+                
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <span id="submitText">
+                        <i class="fas fa-download"></i>
+                        Baixar Música
+                    </span>
+                    <span id="loadingText" style="display: none;">
+                        <div class="loading"></div>
+                        Baixando música...
+                    </span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Alert Messages -->
+        {% if mensagem %}
+        <div class="alert {% if 'sucesso' in mensagem %}alert-success{% else %}alert-danger{% endif %}">
+            <i class="fas {% if 'sucesso' in mensagem %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %}"></i>
+            {{ mensagem }}
+        </div>
+        {% endif %}
+
+        <!-- Features Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 3rem 0;">
+            
+            <div class="tool-card" style="text-align: center; padding: 1.5rem;">
+                <div class="tool-icon" style="color: #ff5500; font-size: 2.5rem;">
+                    <i class="fas fa-headphones"></i>
+                </div>
+                <h3 style="color: white; margin: 1rem 0 0.5rem;">Alta Qualidade</h3>
+                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                    Download em qualidade original sem perda
+                </p>
+            </div>
+
+            <div class="tool-card" style="text-align: center; padding: 1.5rem;">
+                <div class="tool-icon" style="color: #667eea; font-size: 2.5rem;">
+                    <i class="fas fa-list"></i>
+                </div>
+                <h3 style="color: white; margin: 1rem 0 0.5rem;">Playlists</h3>
+                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                    Suporte para faixas individuais e playlists
+                </p>
+            </div>
+
+            <div class="tool-card" style="text-align: center; padding: 1.5rem;">
+                <div class="tool-icon" style="color: #48bb78; font-size: 2.5rem;">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 style="color: white; margin: 1rem 0 0.5rem;">Download Rápido</h3>
+                <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                    Processamento em alta velocidade
+                </p>
+            </div>
+
+        </div>
+
+        <!-- SoundCloud Features -->
+        <div class="tool-card" style="margin-top: 2rem;">
+            <h3 class="tool-title" style="text-align: center; margin-bottom: 2rem;">
+                <i class="fab fa-soundcloud"></i>
+                Por que SoundCloud?
+            </h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                
+                <div style="text-align: center; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 12px;">
+                    <i class="fas fa-users" style="font-size: 2rem; color: #ff5500; margin-bottom: 0.5rem;"></i>
+                    <h4 style="color: white; margin-bottom: 0.5rem;">Artistas Independentes</h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                        Descubra novos talentos e músicas exclusivas
+                    </p>
+                </div>
+
+                <div style="text-align: center; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 12px;">
+                    <i class="fas fa-podcast" style="font-size: 2rem; color: #667eea; margin-bottom: 0.5rem;"></i>
+                    <h4 style="color: white; margin-bottom: 0.5rem;">Podcasts & Mixes</h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                        Baixe podcasts e DJ sets longos
+                    </p>
+                </div>
+
+                <div style="text-align: center; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 12px;">
+                    <i class="fas fa-microphone" style="font-size: 2rem; color: #48bb78; margin-bottom: 0.5rem;"></i>
+                    <h4 style="color: white; margin-bottom: 0.5rem;">Demos & Remixes</h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                        Acesse versões exclusivas e remixes
+                    </p>
+                </div>
+
+                <div style="text-align: center; padding: 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 12px;">
+                    <i class="fas fa-globe" style="font-size: 2rem; color: #f093fb; margin-bottom: 0.5rem;"></i>
+                    <h4 style="color: white; margin-bottom: 0.5rem;">Comunidade Global</h4>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+                        Música de artistas do mundo todo
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="tool-card" style="margin-top: 2rem; text-align: left;">
+            <h3 class="tool-title" style="text-align: center;">
+                <i class="fas fa-lightbulb"></i>
+                Como baixar do SoundCloud
+            </h3>
+            <div style="color: rgba(255, 255, 255, 0.8); line-height: 1.8;">
+                <div style="margin-bottom: 1rem;">
+                    <i class="fas fa-check" style="color: #48bb78; margin-right: 0.5rem;"></i>
+                    <strong>1.</strong> Vá para o SoundCloud e encontre a música desejada
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <i class="fas fa-check" style="color: #48bb78; margin-right: 0.5rem;"></i>
+                    <strong>2.</strong> Copie a URL da música ou playlist
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <i class="fas fa-check" style="color: #48bb78; margin-right: 0.5rem;"></i>
+                    <strong>3.</strong> Cole a URL no campo acima
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <i class="fas fa-check" style="color: #48bb78; margin-right: 0.5rem;"></i>
+                    <strong>4.</strong> Clique em "Baixar Música" e aguarde o download
+                </div>
+                
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(255, 193, 7, 0.1); border-radius: 8px; border: 1px solid rgba(255, 193, 7, 0.3);">
+                    <i class="fas fa-exclamation-triangle" style="color: #ffc107; margin-right: 0.5rem;"></i>
+                    <strong>Importante:</strong> Respeite os direitos autorais. Baixe apenas conteúdo que você tem permissão para usar.
+                </div>
+
+                <div style="margin-top: 1rem; padding: 1rem; background: rgba(102, 126, 234, 0.1); border-radius: 8px;">
+                    <i class="fas fa-lightbulb" style="color: #667eea; margin-right: 0.5rem;"></i>
+                    <strong>Dica:</strong> Funciona com links de músicas individuais e playlists completas do SoundCloud.
+                </div>
+            </div>
+        </div>
+
+        <!-- Supported Links -->
+        <div class="tool-card" style="margin-top: 2rem; text-align: center;">
+            <h3 class="tool-title">
+                <i class="fas fa-link"></i>
+                Links Suportados
+            </h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 1rem;">
+                <div style="padding: 0.5rem 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 20px; color: rgba(255, 255, 255, 0.9);">
+                    <i class="fab fa-soundcloud" style="color: #ff5500;"></i>
+                    soundcloud.com/track
+                </div>
+                <div style="padding: 0.5rem 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 20px; color: rgba(255, 255, 255, 0.9);">
+                    <i class="fab fa-soundcloud" style="color: #ff5500;"></i>
+                    soundcloud.com/playlist
+                </div>
+                <div style="padding: 0.5rem 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 20px; color: rgba(255, 255, 255, 0.9);">
+                    <i class="fab fa-soundcloud" style="color: #ff5500;"></i>
+                    m.soundcloud.com
+                </div>
             </div>
         </div>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>
+            <i class="fas fa-heart" style="color: #f56565;"></i>
+            Util Tools - SoundCloud Downloader gratuito
+        </p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
+        // Form submission with loading state
+        document.getElementById('musicForm').addEventListener('submit', function() {
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const loadingText = document.getElementById('loadingText');
+            
+            submitBtn.disabled = true;
+            submitText.style.display = 'none';
+            loadingText.style.display = 'inline-flex';
+        });
+
+        // URL validation
+        document.getElementById('url').addEventListener('input', function() {
+            const url = this.value;
+            const isValidSoundCloud = url.includes('soundcloud.com');
+            
+            if (url && !isValidSoundCloud) {
+                this.style.borderColor = '#f56565';
+                this.style.boxShadow = '0 0 0 3px rgba(245, 101, 101, 0.2)';
+            } else {
+                this.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                this.style.boxShadow = 'none';
+            }
+        });
+
+        // Auto-detect and format SoundCloud URLs
+        document.getElementById('url').addEventListener('paste', function(e) {
+            setTimeout(() => {
+                let url = this.value.trim();
+                
+                // Auto-format mobile URLs
+                if (url.includes('m.soundcloud.com')) {
+                    url = url.replace('m.soundcloud.com', 'soundcloud.com');
+                    this.value = url;
+                }
+            }, 100);
+        });
+
+        // Scroll effect for header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.modern-header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.15)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.1)';
+            }
+        });
+
+        // Animate cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.tool-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
 </body>
 </html>
