@@ -2,7 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, send_file,
 from PIL import Image
 from pytube import YouTube
 from moviepy import VideoFileClip
-import os, io, tempfile, pytesseract, pytube.request, subprocess, asyncio
+import os, io, tempfile, pytesseract, subprocess, asyncio
+import pytube.request
 from yt_dlp import YoutubeDL
 
 # Try to import rembg, disable feature if not available
