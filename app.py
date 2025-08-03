@@ -1,30 +1,64 @@
+#!/usr/bin/env python3
+
+print("Starting Flask app...")
+
 from flask import Flask, render_template, request, redirect, url_for, send_file, after_this_request
 from PIL import Image
-from pytube import YouTube
-from moviepy import VideoFileClip
-import os, io, tempfile, pytesseract, subprocess, asyncio
-import pytube.request
-from yt_dlp import YoutubeDL
+import os, io, tempfile, subprocess, asyncio
 
-# Try to import rembg, disable feature if not available
+# Try importing all required modules
+try:
+    from pytube import YouTube
+    import pytube.request
+    PYTUBE_AVAILABLE = True
+    print("pytube: OK")
+    # Apply patch for pytube
+    pytube.request.default_headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+except ImportError as e:
+    print(f"pytube not available: {e}")
+    PYTUBE_AVAILABLE = False
+
+try:
+    from moviepy import VideoFileClip
+    MOVIEPY_AVAILABLE = True
+    print("moviepy: OK")
+except ImportError as e:
+    print(f"moviepy not available: {e}")
+    MOVIEPY_AVAILABLE = False
+
+try:
+    from yt_dlp import YoutubeDL
+    YT_DLP_AVAILABLE = True
+    print("yt_dlp: OK")
+except ImportError as e:
+    print(f"yt_dlp not available: {e}")
+    YT_DLP_AVAILABLE = False
+
+try:
+    import pytesseract
+    TESSERACT_AVAILABLE = True
+    print("pytesseract: OK")
+except ImportError as e:
+    print(f"pytesseract not available: {e}")
+    TESSERACT_AVAILABLE = False
+
 try:
     from rembg import remove as rembg_remove
     REMBG_AVAILABLE = True
+    print("rembg: OK")
 except ImportError as e:
-    print(f"Warning: rembg not available - background removal feature disabled: {e}")
+    print(f"rembg not available: {e}")
     REMBG_AVAILABLE = False
-    rembg_remove = None
 
-# Removemos os imports e instância do Spotdl, pois não usaremos Spotify no site
-
-print("Starting Flask app initialization...")
+print("Creating Flask app...")
 app = Flask(__name__)
-print("Flask app created successfully")
 
-# Configuração do Tesseract (necessário apenas no Windows)
-pytesseract.pytesseract.tesseract_cmd = os.getenv("TESSERACT_CMD", "/usr/bin/tesseract")
-
-os.environ["TESSDATA_PREFIX"] = "/usr/share/tesseract-ocr/5/tessdata/"
+# Configuração do Tesseract
+if TESSERACT_AVAILABLE:
+    pytesseract.pytesseract.tesseract_cmd = os.getenv("TESSERACT_CMD", "/usr/bin/tesseract")
+    os.environ["TESSDATA_PREFIX"] = "/usr/share/tesseract-ocr/5/tessdata/"
 
 # Pasta para upload de arquivos
 UPLOAD_FOLDER = 'static/uploads'
@@ -32,25 +66,24 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-# Aplica o patch para corrigir o erro 403 no pytube
-pytube.request.default_headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-}
+print("Flask app configured")
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Rota para Music Downloader (/mdcr) – agora apenas SoundCloud
+# Rota para Music Downloader (/mdcr) – SoundCloud
 @app.route('/mdcr', methods=['GET', 'POST'])
 def mdcr():
     mensagem = None
     if request.method == 'POST':
+        if not YT_DLP_AVAILABLE:
+            mensagem = "Funcionalidade não disponível - yt_dlp não instalado"
+            return render_template('mdcr.html', mensagem=mensagem)
+            
         url = request.form['url']
-        # Aqui, removemos a opção "spotify" e mantemos apenas SoundCloud
         try:
             with tempfile.TemporaryDirectory() as tmpdirname:
-                # Configurações para baixar áudio do SoundCloud usando yt-dlp
                 ydl_opts = {
                     'format': 'bestaudio/best',
                     'outtmpl': os.path.join(tmpdirname, '%(title)s.%(ext)s'),
@@ -67,12 +100,14 @@ def mdcr():
             mensagem = f"Erro: {str(e)}"
     return render_template('mdcr.html', mensagem=mensagem)
 
-# (As demais rotas permanecem inalteradas)
-
 @app.route('/inscon', methods=['GET', 'POST'])
 def inscon():
     mensagem = None
     if request.method == 'POST':
+        if not YT_DLP_AVAILABLE:
+            mensagem = "Funcionalidade não disponível - yt_dlp não instalado"
+            return render_template('inscon.html', mensagem=mensagem)
+            
         url = request.form['url']
         try:
             with tempfile.TemporaryDirectory() as tmpdirname:
@@ -97,16 +132,16 @@ def imagermbg():
     mensagem = None
     imagem_sem_fundo = None
     if request.method == 'POST':
+        if not REMBG_AVAILABLE:
+            mensagem = "Funcionalidade não disponível - rembg não instalado"
+            return render_template('imagermbg.html', mensagem=mensagem, imagem_sem_fundo=None)
+            
         if 'imagem' not in request.files:
             return redirect(request.url)
         arquivo = request.files['imagem']
         if arquivo.filename == '':
             return redirect(request.url)
         try:
-            if not REMBG_AVAILABLE:
-                mensagem = "Erro: Funcionalidade de remoção de fundo não disponível. Biblioteca rembg não foi instalada corretamente."
-                return render_template('imagermbg.html', mensagem=mensagem, imagem_sem_fundo=None)
-
             caminho_imagem = os.path.join(app.config['UPLOAD_FOLDER'], arquivo.filename)
             arquivo.save(caminho_imagem)
             imagem = Image.open(caminho_imagem)
@@ -123,17 +158,25 @@ def imagermbg():
 @app.route('/ocr', methods=['GET', 'POST'])
 def ocr():
     texto_extraido = None
+    mensagem = None
     if request.method == 'POST':
+        if not TESSERACT_AVAILABLE:
+            mensagem = "Funcionalidade não disponível - pytesseract não instalado"
+            return render_template('ocr.html', texto_extraido=None, mensagem=mensagem)
+            
         if 'imagem' not in request.files:
             return redirect(request.url)
         arquivo = request.files['imagem']
         if arquivo.filename == '':
             return redirect(request.url)
-        caminho_imagem = os.path.join(app.config['UPLOAD_FOLDER'], arquivo.filename)
-        arquivo.save(caminho_imagem)
-        imagem = Image.open(caminho_imagem)
-        texto_extraido = pytesseract.image_to_string(imagem, lang='por')
-    return render_template('ocr.html', texto_extraido=texto_extraido)
+        try:
+            caminho_imagem = os.path.join(app.config['UPLOAD_FOLDER'], arquivo.filename)
+            arquivo.save(caminho_imagem)
+            imagem = Image.open(caminho_imagem)
+            texto_extraido = pytesseract.image_to_string(imagem, lang='por')
+        except Exception as e:
+            mensagem = f"Erro: {str(e)}"
+    return render_template('ocr.html', texto_extraido=texto_extraido, mensagem=mensagem)
 
 @app.route('/sobre')
 def sobre():
@@ -143,6 +186,10 @@ def sobre():
 def ytc():
     mensagem = None
     if request.method == 'POST':
+        if not YT_DLP_AVAILABLE:
+            mensagem = "Funcionalidade não disponível - yt_dlp não instalado"
+            return render_template('ytc.html', mensagem=mensagem)
+            
         url = request.form['url']
         formato = request.form['formato']
         qualidade = request.form.get('qualidade', 'best')
@@ -180,6 +227,10 @@ def ytc():
 def mptmp():
     mensagem = None
     if request.method == 'POST':
+        if not MOVIEPY_AVAILABLE:
+            mensagem = "Funcionalidade não disponível - moviepy não instalado"
+            return render_template('mptmp.html', mensagem=mensagem)
+            
         if 'arquivo' not in request.files:
             return redirect(request.url)
         arquivo = request.files['arquivo']
@@ -205,8 +256,10 @@ def mptmp():
             mensagem = f"Erro: {str(e)}"
     return render_template('mptmp.html', mensagem=mensagem)
 
+print("Routes defined")
+
 if __name__ == '__main__':
-    print("Starting main execution...")
+    print("Starting server...")
     port = int(os.environ.get('PORT', 5000))
-    print(f"Starting Flask app on host 0.0.0.0 port {port}...")
+    print(f"Running on port {port}")
     app.run(host='0.0.0.0', port=port, debug=True)
