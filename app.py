@@ -4,7 +4,16 @@ from pytube import YouTube
 from moviepy import VideoFileClip
 import os, io, tempfile, pytesseract, pytube.request, subprocess, asyncio
 from yt_dlp import YoutubeDL
-from rembg import remove
+
+# Try to import rembg, disable feature if not available
+try:
+    from rembg import remove as rembg_remove
+    REMBG_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: rembg not available - background removal feature disabled: {e}")
+    REMBG_AVAILABLE = False
+    rembg_remove = None
+
 # Removemos os imports e instância do Spotdl, pois não usaremos Spotify no site
 
 app = Flask(__name__)
