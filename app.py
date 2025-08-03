@@ -28,6 +28,7 @@ except ImportError as e:
     print(f"moviepy not available: {e}", flush=True)
     MOVIEPY_AVAILABLE = False
 
+print("Attempting to import yt_dlp...", flush=True)
 try:
     from yt_dlp import YoutubeDL
     YT_DLP_AVAILABLE = True
