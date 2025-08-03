@@ -17,44 +17,44 @@ try:
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
 except ImportError as e:
-    print(f"pytube not available: {e}")
+    print(f"pytube not available: {e}", flush=True)
     PYTUBE_AVAILABLE = False
 
 try:
     from moviepy import VideoFileClip
     MOVIEPY_AVAILABLE = True
-    print("moviepy: OK")
+    print("moviepy: OK", flush=True)
 except ImportError as e:
-    print(f"moviepy not available: {e}")
+    print(f"moviepy not available: {e}", flush=True)
     MOVIEPY_AVAILABLE = False
 
 try:
     from yt_dlp import YoutubeDL
     YT_DLP_AVAILABLE = True
-    print("yt_dlp: OK")
+    print("yt_dlp: OK", flush=True)
 except ImportError as e:
-    print(f"yt_dlp not available: {e}")
+    print(f"yt_dlp not available: {e}", flush=True)
     YT_DLP_AVAILABLE = False
 
 try:
     import pytesseract
     TESSERACT_AVAILABLE = True
-    print("pytesseract: OK")
+    print("pytesseract: OK", flush=True)
 except ImportError as e:
-    print(f"pytesseract not available: {e}")
+    print(f"pytesseract not available: {e}", flush=True)
     TESSERACT_AVAILABLE = False
 
-print("Attempting to import rembg...")
+print("Attempting to import rembg...", flush=True)
 try:
     from rembg import remove as rembg_remove
     REMBG_AVAILABLE = True
-    print("rembg: OK")
+    print("rembg: OK", flush=True)
 except Exception as e:
-    print(f"rembg not available: {e}")
+    print(f"rembg not available: {e}", flush=True)
     REMBG_AVAILABLE = False
     rembg_remove = None
 
-print("Creating Flask app...")
+print("Creating Flask app...", flush=True)
 app = Flask(__name__)
 
 # Configuração do Tesseract
@@ -68,7 +68,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-print("Flask app configured")
+print("Flask app configured", flush=True)
 
 @app.route('/')
 def index():
@@ -258,10 +258,10 @@ def mptmp():
             mensagem = f"Erro: {str(e)}"
     return render_template('mptmp.html', mensagem=mensagem)
 
-print("Routes defined")
+print("Routes defined", flush=True)
 
 if __name__ == '__main__':
-    print("Starting server...")
+    print("Starting server...", flush=True)
     port = int(os.environ.get('PORT', 5000))
-    print(f"Running on port {port}")
+    print(f"Running on port {port}", flush=True)
     app.run(host='0.0.0.0', port=port, debug=True)
