@@ -44,35 +44,13 @@ except ImportError as e:
     print(f"pytesseract not available: {e}")
     TESSERACT_AVAILABLE = False
 
+print("Attempting to import rembg...")
 try:
-    print("Attempting to import rembg...")
-    # Import rembg with timeout handling
-    import signal
-    import threading
-
-    def timeout_handler(signum, frame):
-        raise TimeoutError("rembg import timed out")
-
-    # Set a 10-second timeout for rembg import
-    signal.signal(signal.SIGALRM, timeout_handler)
-    signal.alarm(10)
-
-    try:
-        from rembg import remove as rembg_remove
-        signal.alarm(0)  # Cancel the alarm
-        REMBG_AVAILABLE = True
-        print("rembg: OK")
-    except TimeoutError:
-        signal.alarm(0)  # Cancel the alarm
-        print("rembg import timed out - disabling background removal")
-        REMBG_AVAILABLE = False
-        rembg_remove = None
-except ImportError as e:
-    print(f"rembg not available: {e}")
-    REMBG_AVAILABLE = False
-    rembg_remove = None
+    from rembg import remove as rembg_remove
+    REMBG_AVAILABLE = True
+    print("rembg: OK")
 except Exception as e:
-    print(f"rembg import failed: {e}")
+    print(f"rembg not available: {e}")
     REMBG_AVAILABLE = False
     rembg_remove = None
 
