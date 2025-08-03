@@ -46,15 +46,9 @@ except ImportError as e:
     print(f"pytesseract not available: {e}", flush=True)
     TESSERACT_AVAILABLE = False
 
-print("Attempting to import rembg...", flush=True)
-try:
-    from rembg import remove as rembg_remove
-    REMBG_AVAILABLE = True
-    print("rembg: OK", flush=True)
-except Exception as e:
-    print(f"rembg not available: {e}", flush=True)
-    REMBG_AVAILABLE = False
-    rembg_remove = None
+print("Skipping rembg import (causes hanging) - background removal disabled", flush=True)
+REMBG_AVAILABLE = False
+rembg_remove = None
 
 print("Creating Flask app...", flush=True)
 app = Flask(__name__)
