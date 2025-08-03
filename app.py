@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-print("Starting Flask app...")
+print("Starting Flask app...", flush=True)
 
 from flask import Flask, render_template, request, redirect, url_for, send_file, after_this_request
 from PIL import Image
