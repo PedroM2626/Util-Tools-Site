@@ -37,6 +37,7 @@ except ImportError as e:
     print(f"yt_dlp not available: {e}", flush=True)
     YT_DLP_AVAILABLE = False
 
+print("Attempting to import pytesseract...", flush=True)
 try:
     import pytesseract
     TESSERACT_AVAILABLE = True
