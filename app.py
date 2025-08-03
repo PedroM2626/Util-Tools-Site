@@ -100,10 +100,14 @@ def imagermbg():
         if arquivo.filename == '':
             return redirect(request.url)
         try:
+            if not REMBG_AVAILABLE:
+                mensagem = "Erro: Funcionalidade de remoção de fundo não disponível. Biblioteca rembg não foi instalada corretamente."
+                return render_template('imagermbg.html', mensagem=mensagem, imagem_sem_fundo=None)
+
             caminho_imagem = os.path.join(app.config['UPLOAD_FOLDER'], arquivo.filename)
             arquivo.save(caminho_imagem)
             imagem = Image.open(caminho_imagem)
-            imagem_sem_fundo = remove(imagem)
+            imagem_sem_fundo = rembg_remove(imagem)
             nome_arquivo_sem_fundo = 'sem_fundo_' + os.path.splitext(arquivo.filename)[0] + '.png'
             caminho_imagem_sem_fundo = os.path.join(app.config['UPLOAD_FOLDER'], nome_arquivo_sem_fundo)
             imagem_sem_fundo.save(caminho_imagem_sem_fundo, format="PNG")
