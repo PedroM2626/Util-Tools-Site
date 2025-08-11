@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-print("Starting Flask app...", flush=True)
+print("Starting Flask app...")
 
 from flask import Flask, render_template, request, redirect, url_for, send_file, after_this_request
 from PIL import Image
@@ -11,46 +11,48 @@ try:
     from pytube import YouTube
     import pytube.request
     PYTUBE_AVAILABLE = True
-    print("pytube: OK", flush=True)
+    print("pytube: OK")
     # Apply patch for pytube
     pytube.request.default_headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
 except ImportError as e:
-    print(f"pytube not available: {e}", flush=True)
+    print(f"pytube not available: {e}")
     PYTUBE_AVAILABLE = False
 
 try:
     from moviepy import VideoFileClip
     MOVIEPY_AVAILABLE = True
-    print("moviepy: OK", flush=True)
+    print("moviepy: OK")
 except ImportError as e:
-    print(f"moviepy not available: {e}", flush=True)
+    print(f"moviepy not available: {e}")
     MOVIEPY_AVAILABLE = False
 
-print("Attempting to import yt_dlp...", flush=True)
 try:
     from yt_dlp import YoutubeDL
     YT_DLP_AVAILABLE = True
-    print("yt_dlp: OK", flush=True)
+    print("yt_dlp: OK")
 except ImportError as e:
-    print(f"yt_dlp not available: {e}", flush=True)
+    print(f"yt_dlp not available: {e}")
     YT_DLP_AVAILABLE = False
 
-print("Attempting to import pytesseract...", flush=True)
 try:
     import pytesseract
     TESSERACT_AVAILABLE = True
-    print("pytesseract: OK", flush=True)
+    print("pytesseract: OK")
 except ImportError as e:
-    print(f"pytesseract not available: {e}", flush=True)
+    print(f"pytesseract not available: {e}")
     TESSERACT_AVAILABLE = False
 
-print("Skipping rembg import (causes hanging) - background removal disabled", flush=True)
-REMBG_AVAILABLE = False
-rembg_remove = None
+try:
+    from rembg import remove as rembg_remove
+    REMBG_AVAILABLE = True
+    print("rembg: OK")
+except ImportError as e:
+    print(f"rembg not available: {e}")
+    REMBG_AVAILABLE = False
 
-print("Creating Flask app...", flush=True)
+print("Creating Flask app...")
 app = Flask(__name__)
 
 # Configuração do Tesseract
@@ -64,7 +66,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-print("Flask app configured", flush=True)
+print("Flask app configured")
 
 @app.route('/')
 def index():
@@ -254,10 +256,10 @@ def mptmp():
             mensagem = f"Erro: {str(e)}"
     return render_template('mptmp.html', mensagem=mensagem)
 
-print("Routes defined", flush=True)
+print("Routes defined")
 
 if __name__ == '__main__':
-    print("Starting server...", flush=True)
+    print("Starting server...")
     port = int(os.environ.get('PORT', 5000))
-    print(f"Running on port {port}", flush=True)
+    print(f"Running on port {port}")
     app.run(host='0.0.0.0', port=port, debug=True)
